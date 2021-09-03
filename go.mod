@@ -1,4 +1,4 @@
-module gcssl
+module gocheck
 
 go 1.17
 

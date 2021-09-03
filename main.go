@@ -13,12 +13,6 @@ import (
 	"time"
 )
 
-const (
-	usage = `
-	Usage :
-		gcssl -d domain.com -webhook <webhookURL>
-		gcssl -d list.txt -webhook <webhookURL>`
-)
 func checkSSL(domain string, webhookURL string){
 	conn, err := tls.Dial("tcp", domain+":443", nil)
 	if err != nil{
@@ -33,7 +27,7 @@ func checkSSL(domain string, webhookURL string){
 	currentTime := time.Now()
 	expiredDays := int(date.Sub(currentTime).Hours() / 24) 
 	fmt.Printf("Dommain: %s\nIssuer: %s\nExpiry Date: %v\nDays: %v day\n=================\n",domain,conn.ConnectionState().PeerCertificates[0].Issuer, date.Format(time.RFC850), expiredDays)
-	if expiredDays < 500 {
+	if expiredDays < 30 {
 		m := map[string]string{"content": "Hello @everyone, domain "+domain+" mau expired nih tanggal "+date.Format("24-08-2001")}
    		r, w := io.Pipe()
    		go func() {
@@ -59,7 +53,6 @@ func main(){
 		defer file.Close()
 		scanner := bufio.NewScanner(file)
 		for scanner.Scan(){
-			// fmt.Println(scanner.Text())
 			checkSSL(scanner.Text(), webhookURL)
 		}
 	}
