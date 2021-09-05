@@ -19,6 +19,8 @@ domain3.com
 domain4.com
 ```
 
+Cara menggunakan :
+
 ```bash
 gocheck -l list.txt -webhook <url>
 gocheck -d domain.com -webhook <url>
