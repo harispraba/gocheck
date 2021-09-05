@@ -13,6 +13,12 @@ import (
 	"time"
 )
 
+const (
+	usage = `
+		gocheck -d domain.com -webhook <your webhook>
+		gochek -L list.txt -webhook <your webhook>`
+)
+
 func checkSSL(domain string, webhookURL string){
 	conn, err := tls.Dial("tcp", domain+":443", nil)
 	if err != nil{
@@ -43,6 +49,9 @@ func main(){
 	flag.StringVar(&domainName, "d", "", "Type your domain like domain.com")
 	flag.StringVar(&listDomain, "L", "", "List file your domain")
 	flag.Parse()
+	flag.Usage = func() {
+		fmt.Println(usage)
+	}
 	if len(domainName)  != 0 && len(webhookURL) != 0{ 
 		checkSSL(domainName, webhookURL)
 	}else if len(listDomain) != 0&& len(webhookURL) != 0{
