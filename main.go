@@ -14,9 +14,15 @@ import (
 )
 
 const (
-	usage = `
-		gocheck -d domain.com -webhook <your webhook>
-		gochek -L list.txt -webhook <your webhook>`
+	version = `v1beta`
+	author = `mrofisr`
+	banner = `                                 
+	 _____     _____ _           _   
+	|   __|___|     | |_ ___ ___| |_ 
+	|  |  | . |   --|   | -_|  _| '_|
+	|_____|___|_____|_|_|___|___|_,_|
+	author: `+author+` version: `+version+`
+	`
 )
 
 func checkSSL(domain string, webhookURL string){
@@ -49,10 +55,12 @@ func main(){
 	flag.StringVar(&domainName, "d", "", "Type your domain like domain.com")
 	flag.StringVar(&listDomain, "L", "", "List file your domain")
 	flag.Parse()
-	flag.Usage = func() {
-		fmt.Println(usage)
+	if len(os.Args[0]) < 2 {
+		fmt.Println(banner)
+        fmt.Fprintf(os.Stderr, "Usage of :\n")
+		flag.PrintDefaults()
 	}
-	if len(domainName)  != 0 && len(webhookURL) != 0{ 
+	if len(domainName) != 0 && len(webhookURL) != 0 { 
 		checkSSL(domainName, webhookURL)
 	}else if len(listDomain) != 0&& len(webhookURL) != 0{
 		file, err := os.Open(string(listDomain))
