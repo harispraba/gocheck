@@ -11,6 +11,16 @@ go build
 
 ada dua metode penggunaan gocheck, yang pertama hanya mengecek satu domain, dan yang kedua bisa menggunakan list.txt yang berisikan banyak domain.
 
+Format list domain
+```text
+domain1.com
+domain2.com
+domain3.com
+domain4.com
+```
+
+Cara menggunakan :
+
 ```bash
 gocheck -l list.txt -webhook <url>
 gocheck -d domain.com -webhook <url>
