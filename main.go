@@ -1,26 +1,16 @@
 package main
 
 import (
+	"bufio"
 	"crypto/tls"
 	"encoding/json"
 	"flag"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"os"
 	"time"
-)
-
-const (
-	version = `v1beta`
-	author  = `mrofisr`
-	banner  = `                                 
-	 _____     _____ _           _   
-	|   __|___|     | |_ ___ ___| |_ 
-	|  |  | . |   --|   | -_|  _| '_|
-	|_____|___|_____|_|_|___|___|_,_|
-	author: ` + author + ` version: ` + version + `
-	`
 )
 
 var (
@@ -56,22 +46,17 @@ func main() {
 	flag.StringVar(&domainName, "d", "", "Type your domain like domain.com")
 	flag.StringVar(&listDomain, "L", "", "List file your domain")
 	flag.Parse()
-	if len(os.Args[0]) < 2 {
-		fmt.Println(banner)
-		fmt.Fprintf(os.Stderr, "Usage of :\n")
-		flag.PrintDefaults()
+	if len(domainName) != 0 && len(webhookURL) != 0 {
+		checkSSL(domainName, webhookURL)
+	} else if len(listDomain) != 0 && len(webhookURL) != 0 {
+		file, err := os.Open(string(listDomain))
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer file.Close()
+		scanner := bufio.NewScanner(file)
+		for scanner.Scan() {
+			checkSSL(scanner.Text(), webhookURL)
+		}
 	}
-	// if len(domainName) != 0 && len(webhookURL) != 0 {
-	// 	checkSSL(domainName, webhookURL)
-	// } else if len(listDomain) != 0 && len(webhookURL) != 0 {
-	// 	file, err := os.Open(string(listDomain))
-	// 	if err != nil {
-	// 		log.Fatal(err)
-	// 	}
-	// 	defer file.Close()
-	// 	scanner := bufio.NewScanner(file)
-	// 	for scanner.Scan() {
-	// 		checkSSL(scanner.Text(), webhookURL)
-	// 	}
-	// }
 }
