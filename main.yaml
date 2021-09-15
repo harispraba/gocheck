@@ -25,7 +25,6 @@ spec:
           labels:
             name: gocheck-ssl
         spec:
-          restartPolicy: Never
           containers:
           - name: gocheck-ssl
             image: ghcr.io/mrofisr/gocheck:latest
