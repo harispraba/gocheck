@@ -13,10 +13,7 @@ RUN go mod download
 COPY . .
 RUN go build .
 
-FROM alpine:latest
-RUN apk update && apk add ca-certificates && rm -rf /var/cache/apk/*
-COPY ./mycert.crt /usr/local/share/ca-certificates/mycert.crt
-RUN update-ca-certificates
+FROM ubuntu:latest
 COPY --from=build /app/gocheck /bin/gocheck
 ENV HOME /
 ENTRYPOINT ["/bin/gocheck"]
