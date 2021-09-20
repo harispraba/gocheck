@@ -1,3 +1,5 @@
 mrofisr.dev
 google.com
 youtube.com
+bing.com
+mtarget.co

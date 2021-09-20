@@ -1,15 +1,4 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: gocheck-ssl-config
-data:
-  list.txt: |
-    mrofisr.dev
-    google.com
-    youtube.com
-    mtarget.co
----
-apiVersion: batch/v1beta1
+apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: gocheck-ssl
@@ -26,10 +15,12 @@ spec:
             name: gocheck-ssl
         spec:
           containers:
-          - name: gocheck-ssl
-            image: ghcr.io/mrofisr/gocheck:latest
-            command:
-              - /bin/gocheck
-              - -L list.txt
-              - -webhook https://discord.com/api/webhooks/887507194671689800/-rellZ-fxGBiHQ01ZF9ez98FKUuMxypGi1Gyq6bBT7c9vCGmKL7zaCYhkVwcEhC9PnDg
+            - name: gocheck-ssl
+              image: ghcr.io/mrofisr/gocheck:latest
+              command:
+                [
+                  "/bin/gocheck",
+                  "-d=mrofisr.dev",
+                  "-webhook=https://discord.com/api/webhooks/887507194671689800/-rellZ-fxGBiHQ01ZF9ez98FKUuMxypGi1Gyq6bBT7c9vCGmKL7zaCYhkVwcEhC9PnDg",
+                ]
           restartPolicy: OnFailure
