@@ -13,7 +13,8 @@ RUN go mod download
 COPY . .
 RUN go build .
 
-FROM ubuntu:latest
+FROM alpine:latest
+
 COPY --from=build /app/gocheck /bin/gocheck
 ENV HOME /
 ENTRYPOINT ["/bin/gocheck"]
