@@ -1,3 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+data:
+  list.txt: |-
+    mrofisr.dev
+    google.com
+    youtube.com
+metadata:
+  name: gocheck-ssl-conf
+  namespace: default
+
+---
 apiVersion: batch/v1
 kind: CronJob
 metadata:
@@ -20,7 +32,14 @@ spec:
               command:
                 [
                   "/bin/gocheck",
-                  "-d=mrofisr.dev",
+                  "-L=/data/gocheck/list.txt",
                   "-webhook=https://discord.com/api/webhooks/887507194671689800/-rellZ-fxGBiHQ01ZF9ez98FKUuMxypGi1Gyq6bBT7c9vCGmKL7zaCYhkVwcEhC9PnDg",
                 ]
+              volumeMounts:
+                - name: domain-list
+                  mountPath: /data/gocheck
+          volumes:
+            - name: domain-list
+              configMap:
+                name: gocheck-ssl-conf
           restartPolicy: OnFailure
