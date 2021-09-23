@@ -1,0 +1,44 @@
+apiVersion: v1
+kind: ConfigMap
+data:
+  list.txt: |-
+    google.com
+    youtube.com
+metadata:
+  name: gocheck-ssl-conf
+  namespace: default
+
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: gocheck-ssl
+  labels:
+    name: gocheck-ssl
+spec:
+  schedule: "0 0 1 * *"
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          name: gocheck-ssl
+          labels:
+            name: gocheck-ssl
+        spec:
+          containers:
+            - name: gocheck-ssl
+              image: ghcr.io/mrofisr/gocheck:latest
+              command:
+                [
+                  "/bin/gocheck",
+                  "-L=/data/gocheck/list.txt",
+                  "-webhook=https://<your discord webhook url>",
+                ]
+              volumeMounts:
+                - name: domain-list
+                  mountPath: /data/gocheck
+          volumes:
+            - name: domain-list
+              configMap:
+                name: gocheck-ssl-conf
+          restartPolicy: OnFailure
