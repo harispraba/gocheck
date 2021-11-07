@@ -22,7 +22,7 @@ domain4.com
 Cara menggunakan :
 
 ```bash
-gocheck -l list.txt -webhook <url>
+gocheck -L list.txt -webhook <url>
 gocheck -d domain.com -webhook <url>
 ```
 
