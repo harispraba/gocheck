@@ -25,3 +25,57 @@ Cara menggunakan :
 gocheck -l list.txt -webhook <url>
 gocheck -d domain.com -webhook <url>
 ```
+
+
+Menggunakan Kubernetes :
+
+```yaml
+apiVersion: v1
+kind: ConfigMap
+data:
+  list.txt: |-
+    mrofisr.dev
+    google.com
+    youtube.com
+    bing.com
+    mtarget.co
+    akusukajeruk.com
+metadata:
+  name: gocheck-ssl-conf
+  namespace: default
+
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: gocheck-ssl
+  labels:
+    name: gocheck-ssl
+spec:
+  schedule: "0 0 1 * *"
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          name: gocheck-ssl
+          labels:
+            name: gocheck-ssl
+        spec:
+          containers:
+            - name: gocheck-ssl
+              image: ghcr.io/mrofisr/gocheck:latest
+              command:
+                [
+                  "/bin/gocheck",
+                  "-L=/data/gocheck/list.txt",
+                  "-webhook=https://<your discord webhook url>",
+                ]
+              volumeMounts:
+                - name: domain-list
+                  mountPath: /data/gocheck
+          volumes:
+            - name: domain-list
+              configMap:
+                name: gocheck-ssl-conf
+          restartPolicy: OnFailure
+```
