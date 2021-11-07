@@ -33,7 +33,7 @@ func checkSSL(domain string, webhookURL string) {
 		date := expiry
 		currentTime := time.Now()
 		expiredDays := int(date.Sub(currentTime).Hours() / 24)
-		fmt.Printf("Dommain: %s\nIssuer: %s\nExpiry Date: %v\nDays: %v day\n=================\n", domain, conn.ConnectionState().PeerCertificates[0].Issuer, date.Format(time.RFC850), expiredDays)
+		fmt.Printf("Domain: %s\nIssuer: %s\nExpiry Date: %v\nDays: %v day\n=================\n", domain, conn.ConnectionState().PeerCertificates[0].Issuer, date.Format(time.RFC850), expiredDays)
 		if expiredDays < 30 {
 			m := map[string]string{"content": "Hello @everyone, domain " + domain + " mau expired nih tanggal " + date.Format(time.RFC822)}
 			r, w := io.Pipe()
