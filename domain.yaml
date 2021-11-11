@@ -2,9 +2,16 @@ apiVersion: v1
 kind: ConfigMap
 data:
   list.txt: |-
-    mrofisr.dev
-    google.com
-    youtube.com
+    mtarget.co
+    app.mtarget.co
+    docs2.mtarget.co
+    domain.mtarget.co
+    otp.mtarget.co
+    event.mtarget.co
+    testapp.mtarget.co
+    docs.mtarget.co
+    shop-plugin.mtarget.co
+    cms.mtarget.co
 metadata:
   name: gocheck-ssl-conf
   namespace: default
@@ -28,12 +35,13 @@ spec:
         spec:
           containers:
             - name: gocheck-ssl
-              image: ghcr.io/mrofisr/gocheck:latest
+              image: gocheck
+              imagePullPolicy: Never
               command:
                 [
                   "/bin/gocheck",
                   "-L=/data/gocheck/list.txt",
-                  "-webhook=https://discord.com/api/webhooks/887507194671689800/-rellZ-fxGBiHQ01ZF9ez98FKUuMxypGi1Gyq6bBT7c9vCGmKL7zaCYhkVwcEhC9PnDg",
+                  "-webhook=https://discord.com/api/webhooks/906796914463354901/KQVg21rJKiQo7psJb-6BxJHc6PopObKoTYi7PnhKm9lBlsHe_GsmS3h-Q-gU4JIGyHlF",
                 ]
               volumeMounts:
                 - name: domain-list

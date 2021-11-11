@@ -1,6 +1,10 @@
-mrofisr.dev
-google.com
-youtube.com
-bing.com
 mtarget.co
-akusukajeruk.com
+app.mtarget.co
+docs2.mtarget.co
+domain.mtarget.co
+otp.mtarget.co
+event.mtarget.co
+testapp.mtarget.co
+docs.mtarget.co
+shop-plugin.mtarget.co
+cms.mtarget.co

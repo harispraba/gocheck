@@ -17,4 +17,6 @@ FROM alpine:latest
 
 COPY --from=build /app/gocheck /bin/gocheck
 ENV HOME /
-ENTRYPOINT ["/bin/gocheck"]
+
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+USER appuser
