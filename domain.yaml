@@ -35,8 +35,7 @@ spec:
         spec:
           containers:
             - name: gocheck-ssl
-              image: gocheck
-              imagePullPolicy: Never
+              image: ghcr.io/mrofisr/gocheck:latest
               command:
                 [
                   "/bin/gocheck",
