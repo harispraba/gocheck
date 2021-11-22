@@ -2,16 +2,9 @@ apiVersion: v1
 kind: ConfigMap
 data:
   list.txt: |-
-    mtarget.co
-    app.mtarget.co
-    docs2.mtarget.co
-    domain.mtarget.co
-    otp.mtarget.co
-    event.mtarget.co
-    testapp.mtarget.co
-    docs.mtarget.co
-    shop-plugin.mtarget.co
-    cms.mtarget.co
+    passbolt.mtarget.co
+    vault.mtarget.co
+    bastillion.mtarget.co
 metadata:
   name: gocheck-ssl-conf
   namespace: default

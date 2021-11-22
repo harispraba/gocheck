@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"net"
 	"net/http"
 	"os"
 	"time"
@@ -17,25 +18,45 @@ import (
 
 var (
 	domainName, listDomain, webhookURL string
+	dialer                             = &net.Dialer{Timeout: 5 * time.Second}
 )
 
 func checkSSL(domain string, webhookURL string) {
 	if !available.Domain(domain) {
-		conn, err := tls.Dial("tcp", domain+":443", nil)
+		conn, err := tls.DialWithDialer(dialer, "tcp", domain+":443", nil)
 		if err != nil {
-			panic("Server doesn't support SSL certificate err: " + err.Error())
+			fmt.Println("Domain " + domain + " doesn't support SSL certificate err: " + err.Error())
+			fmt.Println("=================")
+			m := map[string]string{"content": "Halo @devops, domain " + domain + " kayaknya ada masalah deh.\nIni errornya : " + err.Error() + ".\nMinta tolong coba di cek yaa @devops ^^ "}
+			r, w := io.Pipe()
+			go func() {
+				json.NewEncoder(w).Encode(m)
+				w.Close()
+			}()
+			http.Post(webhookURL, "application/json", r)
+			return
 		}
+		defer conn.Close()
 		err = conn.VerifyHostname(domain)
 		if err != nil {
-			panic("Hostname doesn't match with certificate: " + err.Error())
+			fmt.Println("Hostname doesn't match with certificate: " + err.Error())
+			fmt.Println("=================")
+			m := map[string]string{"content": "Halo @devops, domain " + domain + " kayaknya ada masalah deh.\nIni errornya : " + err.Error() + ".\nMinta tolong coba di cek yaa @devops ^^ "}
+			r, w := io.Pipe()
+			go func() {
+				json.NewEncoder(w).Encode(m)
+				w.Close()
+			}()
+			http.Post(webhookURL, "application/json", r)
+			return
 		}
 		expiry := conn.ConnectionState().PeerCertificates[0].NotAfter
 		date := expiry
 		currentTime := time.Now()
 		expiredDays := int(date.Sub(currentTime).Hours() / 24)
-		fmt.Printf("Domain: %s\nIssuer: %s\nExpiry Date: %v\nDays: %v day\n=================\n", domain, conn.ConnectionState().PeerCertificates[0].Issuer, date.Format(time.RFC850), expiredDays)
-		if expiredDays < 30 {
-			m := map[string]string{"content": "Hello @everyone, domain " + domain + " mau expired nih tanggal " + date.Format(time.RFC822)}
+		fmt.Printf("Domain: %s\nIssuer: %s\nExpiry Date: %v\nDays: %v day\n=================\n", domain, conn.ConnectionState().PeerCertificates[0].Issuer, date.Format("02-01-2006"), expiredDays)
+		if expiredDays <= 30 {
+			m := map[string]string{"content": "Hello @devops, domain " + domain + " mau expired nih tanggal " + date.Format("02-01-2006")}
 			r, w := io.Pipe()
 			go func() {
 				json.NewEncoder(w).Encode(m)
